@@ -1,0 +1,12 @@
+Package: Dijkstra
+Type: Package
+Title: Dijkstra algorithm
+Version: 0.1.0
+Author: Fabrizio Sandri
+Maintainer: Fabrizio Sandri <sandri.fabr@gmail.com>
+Description: Simple implementation of the Dijkstra algorithm using a C++ implementation
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 1.0.8.3)
+LinkingTo: Rcpp
