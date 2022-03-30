@@ -4,13 +4,21 @@
 \alias{dijkstra}
 \title{Dijkstra algorithm implementation}
 \usage{
-dijkstra(mat, weights)
+dijkstra(edgeList, weights, numNodes, startNode, isDirected)
 }
 \arguments{
-\item{mat}{the Graph structure representation as output from as_edgelist(G)}
+\item{edgeList}{the Graph structure representation as output from as_edgelist(G)}
 
 \item{weights}{a vector containing the weights for each edge(each line) of
 the edgelist matrix}
+
+\item{numNodes}{the number of nodes of the graph}
+
+\item{startNode}{the starting node which we are interested in calculating
+the shortest paths}
+
+\item{isDirected}{boolean value stating that each edge into the edge matrix
+should be trated or not as a directed edge}
 }
 \description{
 Dijkstra algorithm implementation

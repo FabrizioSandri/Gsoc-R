@@ -11,20 +11,23 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // dijkstra
-int dijkstra(Rcpp::NumericMatrix mat, std::vector<int> weights);
-RcppExport SEXP _Dijkstra_dijkstra(SEXP matSEXP, SEXP weightsSEXP) {
+std::vector<int> dijkstra(Rcpp::NumericMatrix edgeList, std::vector<int> weights, int numNodes, int startNode, bool isDirected);
+RcppExport SEXP _Dijkstra_dijkstra(SEXP edgeListSEXP, SEXP weightsSEXP, SEXP numNodesSEXP, SEXP startNodeSEXP, SEXP isDirectedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type edgeList(edgeListSEXP);
     Rcpp::traits::input_parameter< std::vector<int> >::type weights(weightsSEXP);
-    rcpp_result_gen = Rcpp::wrap(dijkstra(mat, weights));
+    Rcpp::traits::input_parameter< int >::type numNodes(numNodesSEXP);
+    Rcpp::traits::input_parameter< int >::type startNode(startNodeSEXP);
+    Rcpp::traits::input_parameter< bool >::type isDirected(isDirectedSEXP);
+    rcpp_result_gen = Rcpp::wrap(dijkstra(edgeList, weights, numNodes, startNode, isDirected));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_Dijkstra_dijkstra", (DL_FUNC) &_Dijkstra_dijkstra, 2},
+    {"_Dijkstra_dijkstra", (DL_FUNC) &_Dijkstra_dijkstra, 5},
     {NULL, NULL, 0}
 };
 
