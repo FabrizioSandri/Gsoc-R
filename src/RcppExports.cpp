@@ -10,19 +10,21 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP _Dijkstra_rcpp_hello() {
+// dijkstra
+int dijkstra(Rcpp::NumericMatrix mat, std::vector<int> weights);
+RcppExport SEXP _Dijkstra_dijkstra(SEXP matSEXP, SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type weights(weightsSEXP);
+    rcpp_result_gen = Rcpp::wrap(dijkstra(mat, weights));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_Dijkstra_rcpp_hello", (DL_FUNC) &_Dijkstra_rcpp_hello, 0},
+    {"_Dijkstra_dijkstra", (DL_FUNC) &_Dijkstra_dijkstra, 2},
     {NULL, NULL, 0}
 };
 
