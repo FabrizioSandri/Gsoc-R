@@ -2,10 +2,15 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' Dijkstra algorithm implementation
-#' @param mat the Graph structure representation as output from as_edgelist(G)
+#' @param edgeList the Graph structure representation as output from as_edgelist(G)
 #' @param weights a vector containing the weights for each edge(each line) of
-#'       the edgelist matrix
-dijkstra <- function(mat, weights) {
-    .Call(`_Dijkstra_dijkstra`, mat, weights)
+#'         the edgelist matrix
+#' @param numNodes the number of nodes of the graph
+#' @param startNode the starting node which we are interested in calculating
+#'         the shortest paths
+#' @param isDirected boolean value stating that each edge into the edge matrix
+#'         should be trated or not as a directed edge
+dijkstra <- function(edgeList, weights, numNodes, startNode, isDirected) {
+    .Call(`_Dijkstra_dijkstra`, edgeList, weights, numNodes, startNode, isDirected)
 }
 
