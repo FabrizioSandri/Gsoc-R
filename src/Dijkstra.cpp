@@ -65,55 +65,57 @@ std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode
 
 
 //' Dijkstra algorithm implementation - input a SparseMatrix
-//' @param matrix the Graph structure representation as output from
+//' @param dgCMatrix the Graph structure representation as output from
 //'         as_adj(graph, attr = "weight")
 //' @param startNode the starting node which we are interested in calculating
 //'         the shortest paths
 // [[Rcpp::export]]
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 matrix, int startNode){
-    vector<int> i = matrix.slot("i");
-    vector<int> p = matrix.slot("p");
-    vector<int> x = matrix.slot("x");
-    vector<int> dim = matrix.slot("Dim");
-
-    Rcpp::List labels = matrix.slot("Dimnames");
-    Rcpp::List labelsDim0 = labels[0];
-
+std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, int startNode){
+    vector<int> i = dgCMatrix.slot("i");
+    vector<int> p = dgCMatrix.slot("p");
+    vector<int> x = dgCMatrix.slot("x");
+    vector<int> dim = dgCMatrix.slot("Dim");
+    Rcpp::List bothDimLabels = dgCMatrix.slot("Dimnames");
+    Rcpp::List nodeLabels = bothDimLabels[0]; // get node names of a single dimension
 
     int numNodes = dim[0];
     int numEdges = i.size();
 
+    /**
+     * Representation of a graph as a vector of nodes. See the header file
+     * related to this source code ("Dijkstra.h") in the definition of the struct
+     * Node for more info about the Node structure.
+     */
     vector<Node> graph(numNodes);
-    vector<int> distance(numNodes, inf);
-
-    vector<vector<int>> distanceMatrix(dim[0],vector<int>(dim[1]));
 
     /**
-     * Parse the dgCMatrix provided by R into a distance matrix
+     * Resulting distance vector after applying the Dijkstra algorithm
+     * on the graph
+     */
+    vector<int> distance;
+
+
+    /**
+     * Parse the dgCMatrix provided by R into an easier structure: a vector
+     * of Nodes.
+     *
+     * NOTE: each edge is defined as a source node and a destination node.
+     * In the original dgCMatrix each row correspond to the source node
+     * and each column correspond to the destination node.
      */
     int row = 0;
     for(int j=0; j<numEdges; j++){
         int col = i[j];
 
-        // every new line in the matrix is specified by the p vector
+        // every new line in the dgCMatrix is specified by the p vector
         if (row<numNodes-1 && p[row+1] == j) {
             row++;
         }
 
-        distanceMatrix[row][col] = x[j];
+        graph[row].adj.push_back(col); // edge from source(row) to destination(col)
+        graph[row].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
     }
 
-    /**
-     * Parse the distance matrix into a Graph (represented as a vector of Nodes)
-     */
-    for (int from=0; from<numNodes; from++){
-        for(int to=0; to<numNodes; to++){
-            if (distanceMatrix[from][to] != 0){
-                graph[from].adj.push_back(to);
-                graph[from].costs.push_back(distanceMatrix[from][to]);
-            }
-        }
-    }
 
     // execute the dijkstra algorithm and return the distance vector
     distance = dijkstraAlgorithm(graph, startNode);
