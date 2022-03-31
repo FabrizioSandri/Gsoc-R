@@ -10,11 +10,11 @@
 NULL
 
 #' Dijkstra algorithm implementation - input a SparseMatrix
-#' @param matrix the Graph structure representation as output from
+#' @param dgCMatrix the Graph structure representation as output from
 #'         as_adj(graph, attr = "weight")
 #' @param startNode the starting node which we are interested in calculating
 #'         the shortest paths
-dijkstraSparseMatrix <- function(matrix, startNode) {
-    .Call(`_Dijkstra_dijkstraSparseMatrix`, matrix, startNode)
+dijkstraSparseMatrix <- function(dgCMatrix, startNode) {
+    .Call(`_Dijkstra_dijkstraSparseMatrix`, dgCMatrix, startNode)
 }
 

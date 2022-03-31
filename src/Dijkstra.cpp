@@ -29,7 +29,9 @@ std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode
 
     vector<int> distance(numNodes, inf);
 
-    // inititalization
+    /**
+     * Inititalization with the starting node
+     */
     minPQueue.push(make_pair(startNode,0));
     distance[startNode] = 0;
 
@@ -67,19 +69,21 @@ std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode
 //' Dijkstra algorithm implementation - input a SparseMatrix
 //' @param dgCMatrix the Graph structure representation as output from
 //'         as_adj(graph, attr = "weight")
-//' @param startNode the starting node which we are interested in calculating
-//'         the shortest paths
+//' @param startNode the label of the starting node which we are interested in +
+//'         calculating the shortest paths
 // [[Rcpp::export]]
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, int startNode){
+std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode){
     vector<int> i = dgCMatrix.slot("i");
     vector<int> p = dgCMatrix.slot("p");
     vector<int> x = dgCMatrix.slot("x");
     vector<int> dim = dgCMatrix.slot("Dim");
     Rcpp::List bothDimLabels = dgCMatrix.slot("Dimnames");
-    Rcpp::List nodeLabels = bothDimLabels[0]; // get node names of a single dimension
+    Rcpp::StringVector nodeLabels = bothDimLabels[0]; // get node names of a single dimension
 
     int numNodes = dim[0];
     int numEdges = i.size();
+
+    int startNodeIndex = 0;
 
     /**
      * Representation of a graph as a vector of nodes. See the header file
@@ -116,9 +120,22 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, int startNode){
         graph[row].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
     }
 
+    /**
+     * Find the starting node index value as we deal with indexes and
+     * not with node labels.
+     */
+    for (int t=0; t<numNodes; t++ ){
+        string label = string(nodeLabels(t));
+        if (startNode == label){
+            startNodeIndex = t;
+            break;
+        }
+    }
 
-    // execute the dijkstra algorithm and return the distance vector
-    distance = dijkstraAlgorithm(graph, startNode);
+    /**
+     * Execute the dijkstra algorithm and return the distance vector
+     */
+    distance = dijkstraAlgorithm(graph, startNodeIndex);
 
     return distance;
 }
