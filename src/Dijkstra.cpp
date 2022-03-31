@@ -72,13 +72,13 @@ std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode
 //' @param startNode the label of the starting node which we are interested in +
 //'         calculating the shortest paths
 // [[Rcpp::export]]
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode){
+Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode){
     vector<int> i = dgCMatrix.slot("i");
     vector<int> p = dgCMatrix.slot("p");
     vector<int> x = dgCMatrix.slot("x");
     vector<int> dim = dgCMatrix.slot("Dim");
     Rcpp::List bothDimLabels = dgCMatrix.slot("Dimnames");
-    Rcpp::StringVector nodeLabels = bothDimLabels[0]; // get node names of a single dimension
+    Rcpp::List nodeLabels = bothDimLabels[0];
 
     int numNodes = dim[0];
     int numEdges = i.size();
@@ -98,7 +98,6 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
      */
     vector<int> distance;
 
-
     /**
      * Parse the dgCMatrix provided by R into an easier structure: a vector
      * of Nodes.
@@ -107,17 +106,29 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
      * In the original dgCMatrix each row correspond to the source node
      * and each column correspond to the destination node.
      */
-    int row = 0;
+    int to = 0;
     for(int j=0; j<numEdges; j++){
-        int col = i[j];
+        int from = i[j];
 
         // every new line in the dgCMatrix is specified by the p vector
-        if (row<numNodes-1 && p[row+1] == j) {
-            row++;
+        if (to<numNodes-1 && p[to+1] == j) {
+            to++;
         }
 
-        graph[row].adj.push_back(col); // edge from source(row) to destination(col)
-        graph[row].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
+        graph[from].adj.push_back(to); // edge from source to destination
+        graph[from].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
+    }
+
+
+    /**
+     * Sometimes nodes don't' have any name associated, so assume that the
+     * labels range from 1 to numNodes
+     */
+    if (nodeLabels.size() == 0){
+
+        for (int t=0; t<numNodes; t++){
+            nodeLabels.push_back(to_string(t + 1));
+        }
     }
 
     /**
@@ -125,7 +136,7 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
      * not with node labels.
      */
     for (int t=0; t<numNodes; t++ ){
-        string label = string(nodeLabels(t));
+        string label = Rcpp::as<string>(nodeLabels(t));
         if (startNode == label){
             startNodeIndex = t;
             break;
@@ -133,9 +144,16 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
     }
 
     /**
-     * Execute the dijkstra algorithm and return the distance vector
+     * Execute the dijkstra algorithm and return the distance vector as a
+     * Named NumeriVector
      */
     distance = dijkstraAlgorithm(graph, startNodeIndex);
 
-    return distance;
+    Rcpp::NumericVector v = Rcpp::NumericVector::create();
+    for(int t=0; t<numNodes; t++){
+        v.push_back(distance[t], Rcpp::as<string>(nodeLabels(t)));
+    }
+
+
+    return v;
 }
