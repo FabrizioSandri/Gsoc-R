@@ -98,7 +98,6 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
      */
     vector<int> distance;
 
-
     /**
      * Parse the dgCMatrix provided by R into an easier structure: a vector
      * of Nodes.
@@ -107,17 +106,17 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
      * In the original dgCMatrix each row correspond to the source node
      * and each column correspond to the destination node.
      */
-    int row = 0;
+    int to = 0;
     for(int j=0; j<numEdges; j++){
-        int col = i[j];
+        int from = i[j];
 
         // every new line in the dgCMatrix is specified by the p vector
-        if (row<numNodes-1 && p[row+1] == j) {
-            row++;
+        if (to<numNodes-1 && p[to+1] == j) {
+            to++;
         }
 
-        graph[row].adj.push_back(col); // edge from source(row) to destination(col)
-        graph[row].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
+        graph[from].adj.push_back(to); // edge from source to destination
+        graph[from].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
     }
 
     /**
