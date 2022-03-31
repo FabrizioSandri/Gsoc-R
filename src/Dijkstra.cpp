@@ -72,7 +72,7 @@ std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode
 //' @param startNode the label of the starting node which we are interested in +
 //'         calculating the shortest paths
 // [[Rcpp::export]]
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode){
+Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode){
     vector<int> i = dgCMatrix.slot("i");
     vector<int> p = dgCMatrix.slot("p");
     vector<int> x = dgCMatrix.slot("x");
@@ -132,9 +132,15 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode
     }
 
     /**
-     * Execute the dijkstra algorithm and return the distance vector
+     * Execute the dijkstra algorithm and return the distance vector as a
+     * Named NumeriVector
      */
     distance = dijkstraAlgorithm(graph, startNodeIndex);
 
-    return distance;
+    Rcpp::NumericVector v = Rcpp::NumericVector::create();
+    for(int t=0; t<numNodes; t++){
+        v.push_back(distance[t], string(nodeLabels(t)));
+    }
+
+    return v;
 }

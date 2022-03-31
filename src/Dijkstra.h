@@ -36,6 +36,6 @@ public:
  */
 std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode);
 
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 matrix, Rcpp::String startNode);
+Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 matrix, Rcpp::String startNode);
 
 #endif

@@ -11,7 +11,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // dijkstraSparseMatrix
-std::vector<int> dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode);
+Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startNode);
 RcppExport SEXP _Dijkstra_dijkstraSparseMatrix(SEXP dgCMatrixSEXP, SEXP startNodeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
