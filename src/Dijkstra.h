@@ -34,7 +34,8 @@ public:
 /**
  * Dijkstra algorithm function implementation header
  */
-std::vector<int> dijkstra(Rcpp::NumericMatrix edgeList, std::vector<int> weights, int numNodes,
-                          int startNode, bool isDirected);
+std::vector<int> dijkstraAlgorithm(const std::vector<Node>& graph, int startNode);
+
+std::vector<int> dijkstraSparseMatrix(Rcpp::S4 matrix, int startNode);
 
 #endif
