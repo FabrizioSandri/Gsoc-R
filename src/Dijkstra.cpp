@@ -78,7 +78,7 @@ Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startN
     vector<int> x = dgCMatrix.slot("x");
     vector<int> dim = dgCMatrix.slot("Dim");
     Rcpp::List bothDimLabels = dgCMatrix.slot("Dimnames");
-    Rcpp::StringVector nodeLabels = bothDimLabels[0]; // get node names of a single dimension
+    Rcpp::List nodeLabels = bothDimLabels[0];
 
     int numNodes = dim[0];
     int numEdges = i.size();
@@ -119,12 +119,24 @@ Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startN
         graph[from].costs.push_back(x[j]); // x[j] contains the cost of the jth edge
     }
 
+
+    /**
+     * Sometimes nodes don't' have any name associated, so assume that the
+     * labels range from 1 to numNodes
+     */
+    if (nodeLabels.size() == 0){
+
+        for (int t=0; t<numNodes; t++){
+            nodeLabels.push_back(to_string(t + 1));
+        }
+    }
+
     /**
      * Find the starting node index value as we deal with indexes and
      * not with node labels.
      */
     for (int t=0; t<numNodes; t++ ){
-        string label = string(nodeLabels(t));
+        string label = Rcpp::as<string>(nodeLabels(t));
         if (startNode == label){
             startNodeIndex = t;
             break;
@@ -139,8 +151,9 @@ Rcpp::NumericVector dijkstraSparseMatrix(Rcpp::S4 dgCMatrix, Rcpp::String startN
 
     Rcpp::NumericVector v = Rcpp::NumericVector::create();
     for(int t=0; t<numNodes; t++){
-        v.push_back(distance[t], string(nodeLabels(t)));
+        v.push_back(distance[t], Rcpp::as<string>(nodeLabels(t)));
     }
+
 
     return v;
 }
