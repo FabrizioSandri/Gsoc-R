@@ -89,40 +89,33 @@ std::vector<int> dijkstraSparseMatrix(Rcpp::S4 matrix, int startNode){
     vector<vector<int>> distanceMatrix(dim[0],vector<int>(dim[1]));
 
     /**
-     * Parse the edge matrix into a Graph (represented as a vector of Nodes)
-     * paying attention to the case that the graph is directed.
+     * Parse the dgCMatrix provided by R into a distance matrix
      */
-    int prev = 0;
     int row = 0;
     for(int j=0; j<numEdges; j++){
         int col = i[j];
 
-        if (prev >= col) {
+        // every new line in the matrix is specified by the p vector
+        if (row<numNodes-1 && p[row+1] == j) {
             row++;
         }
 
         distanceMatrix[row][col] = x[j];
-        prev = i[j];
     }
 
-    for (int from=0; from<dim[0]; from++){
-        for(int to=0; to<dim[1]; to++){
-            cout << distanceMatrix[from][to] << " ";
-        }
-        cout << endl;
-    }
-
-    for (int from=0; from<dim[0]; from++){
-        for(int to=0; to<dim[1]; to++){
+    /**
+     * Parse the distance matrix into a Graph (represented as a vector of Nodes)
+     */
+    for (int from=0; from<numNodes; from++){
+        for(int to=0; to<numNodes; to++){
             if (distanceMatrix[from][to] != 0){
-                // add each directed edge to the graph
                 graph[from].adj.push_back(to);
                 graph[from].costs.push_back(distanceMatrix[from][to]);
-
             }
         }
     }
 
+    // execute the dijkstra algorithm and return the distance vector
     distance = dijkstraAlgorithm(graph, startNode);
 
     return distance;
