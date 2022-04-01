@@ -37,6 +37,8 @@ This output can be read in the following way:
 * The cost to reach node `30` from node `1` the cost is 3
 * ...
 
+**NOTE :** the soruceNode parameter is the label of the source node represented as a string. In this way it could be possibile to have strings as node labels. See the cities graph in the Example section. 
+
 ## Weighted graph
 If the graph you are dealing with is weighted you have to specify the parameter `attr = "weight"` to `as_adj`. In the following example, we creae a sample weighted graph composed of 6 nodes named with the alphabet letters.
 ```R
@@ -44,9 +46,24 @@ gl <- graph_from_literal(a-+c-+b-+d+-e-+f, a-+b, c-+d, d-+f, b-+e)
 E(gl)$weight <- c(2,1,1,3,5,2,1,1,3)       # assign a fixed weight to each edge
 distanceVector <- dijkstraSparseMatrix(as_adj(gl, attr = "weight"), "a")
 ```
-The resulting distance vector looks like 
+The resulting distance vector is
 ```R
 a c b d e f 
 0 2 1 4 3 5 
 ```
 
+## Example
+Suppose to have a graph representing some types of connections between capital cities in Europe. The connections are represented by a undirected weighted graph, like the following one. 
+![Cities](https://i.postimg.cc/zDpZXg4F/graph.png)
+Suppose that we need to find the minimum distance from `Madrid` to all the other cities. The following code will solve the problem. As you can see in the following sample of code the source node is a string representing the city `Madrid`.
+```R
+G <- graph_from_literal(Rome-Berlin-Paris-Madrid, Paris-London-Berlin, Rome-Madrid) 
+E(G)$weight <- c(1,5,2,3,1,4)
+
+distanceVector <- dijkstraSparseMatrix(as_adj(G, attr = "weight"), "Madrid")
+```
+The resulting distance vector is
+```R
+  Rome Berlin  Paris Madrid London 
+     4      3      1      0      5
+```
