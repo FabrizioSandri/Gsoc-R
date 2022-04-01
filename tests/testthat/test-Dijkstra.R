@@ -1,7 +1,7 @@
 library(igraph)
 
 test_that(
-    "Sample graph 1",
+    "Sample graph 1 (directed)",
     {
         result = TRUE
 
@@ -55,6 +55,30 @@ test_that(
         correctVector <- setNames(
             c(0,2,3,4,7,12,14,15,16,20,23,22,20,19,18,15,13,12,11,8),
             1:20
+        )
+
+
+        for(name in names(distanceVector)) {
+            result = result && (distanceVector[[name]] == correctVector[[name]])
+        }
+
+        expect_true(result)
+
+    }
+)
+
+test_that(
+    "Sample graph 3 (Capital cities)",
+    {
+        result = TRUE
+
+        G <- graph_from_literal(Rome-Berlin-Paris-Madrid, Paris-London-Berlin, Rome-Madrid)
+        E(G)$weight <- c(1,5,2,3,1,4)
+
+        distanceVector <- dijkstraSparseMatrix(as_adj(G, attr = "weight"), "Madrid")
+        correctVector <- setNames(
+            c(4,3,1,0,5),
+            c("Rome", "Berlin", "Paris", "Madrid", "London")
         )
 
 
