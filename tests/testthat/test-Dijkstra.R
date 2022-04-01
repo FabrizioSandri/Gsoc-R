@@ -10,10 +10,32 @@ test_that(
 
         distanceVector <- dijkstraSparseMatrix(as_adj(gl, attr = "weight"), "a")
         correctVector <- setNames(c(0,1,2,4,3,5),c("a", "b", "c", "d", "e", "f"))
-        plot(gl, edge.label=E(gl)$weight)
 
         for(name in names(distanceVector)) {
             result = result && (distanceVector[name] == correctVector[name])
+        }
+
+        expect_true(result)
+
+    }
+)
+
+test_that(
+    "Sample graph 2",
+    {
+        result = TRUE
+
+        G <-  graph("Zachary")      # sample graph
+        distanceVector <- dijkstraSparseMatrix(as_adj(G), "1")
+
+        correctVector <- setNames(
+            c(0,1,1,1,1,1,1,1,1,2,1,1,1,1,3,3,2,1,3,1,3,1,3,3,2,2,3,2,2,3,2,1,2,2),
+            1:34
+        )
+
+
+        for(name in names(distanceVector)) {
+            result = result && (distanceVector[[name]] == correctVector[[name]])
         }
 
         expect_true(result)
