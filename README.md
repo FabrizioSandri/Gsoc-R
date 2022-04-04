@@ -58,7 +58,9 @@ a c b d e f
 
 ## Example
 Suppose to have a graph representing some types of connections between capital cities in Europe. The connections are represented by a undirected weighted graph, like the following one. 
+
 ![Cities](https://i.postimg.cc/zDpZXg4F/graph.png)
+
 Suppose that we need to find the minimum distance from `Madrid` to all the other cities. The following code will solve the problem. As you can see in the following sample of code the source node is a string representing the city `Madrid`.
 ```R
 G <- graph_from_literal(Rome-Berlin-Paris-Madrid, Paris-London-Berlin, Rome-Madrid) 
