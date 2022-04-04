@@ -35,10 +35,10 @@ The function `dijkstraSparseMatrix` returns a distance vector as a named vector,
  0  1  1  1  1  1  1  1  1  2  1  1  1  1  3  3  2  1  3  1  3  1  3  3  2  2  3  2  2  3  2  1  2  2 
 ```
 This output can be read in the following way:
-* The cost to reach node `1` from node `1` the cost is 0
-* The cost to reach node `2` from node `1` the cost is 1
-* The cost to reach node `26` from node `1` the cost is 2
-* The cost to reach node `30` from node `1` the cost is 3
+* The cost to reach node `1` from node `1` is 0
+* The cost to reach node `2` from node `1` is 1
+* The cost to reach node `26` from node `1` is 2
+* The cost to reach node `30` from node `1` is 3
 * ...
 
 **NOTE :** the soruceNode parameter is the label of the source node represented as a string. In this way it could be possibile to have strings as node labels. See the cities graph in the Example section. 
