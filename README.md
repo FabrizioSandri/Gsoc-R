@@ -7,8 +7,12 @@ The Dijkstra algorithm is written in C++, and interact with the R environment us
 
 The algorithm is written in a way that allows any Graph built using `igraph` library to be parserd as input.
 
-## Quick start
-The easiest way to use this library is to install and include it into a working R environment in the following way
+## Istallation
+The easiest way to use this library is to install it using devtools and include it into a working R environment
+```R
+devtools::install_github("FabrizioSandri/Gsoc-R")
+```
+after the installation has succeeded you can import the library
 ```R
 require("Dijkstra")
 ```
