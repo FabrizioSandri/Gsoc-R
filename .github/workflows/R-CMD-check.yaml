@@ -23,3 +23,18 @@ jobs:
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
+  
+  custom_test:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup R environment and test cities graph 
+        uses: ./actions/ 
+        with:
+          source_node: "Rome"
+      
