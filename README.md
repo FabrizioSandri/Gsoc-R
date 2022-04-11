@@ -1,6 +1,7 @@
 #  Dijkstra implementation as Rcpp library
 
 [![R-CMD-check](https://github.com/FabrizioSandri/Gsoc-R/workflows/R-CMD-check/badge.svg)](https://github.com/FabrizioSandri/Gsoc-R/actions)
+[![custom-check](https://github.com/FabrizioSandri/Gsoc-R/workflows/custom-check/badge.svg)](https://github.com/FabrizioSandri/Gsoc-R/actions)
 
 This package provides a minimal Dijkstra algorithm implementation library based on a min-priority queue.
 The Dijkstra algorithm is written in C++, and interact with the R environment using the Rcpp library.
