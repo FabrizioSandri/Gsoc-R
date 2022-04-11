@@ -1,0 +1,18 @@
+# action.yaml
+name: 'Custom check'
+description: 'GSOC 2022 Dijkstra algorithm custom check on a sample graph'
+inputs:
+  source_node:
+    description: 'the source node for the test graph'
+    required: true
+    default: "Madrid"
+  zoneinfo:
+    description: 'zoneinfo path for localtime'
+    required: true
+    default: "Europe/Rome"
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source_node}}
+    - ${{ inputs.zoneinfo }}
